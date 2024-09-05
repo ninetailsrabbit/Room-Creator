@@ -351,7 +351,6 @@ func create_right_wall(size: Vector3 = room_size) -> void:
 		
 	right_wall.name = "RightWall"
 		
-	add_child(right_wall)
 	RoomCreatorUtils.set_owner_to_edited_scene_root(right_wall)
 
 

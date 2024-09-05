@@ -110,6 +110,10 @@ func save_generated_meshes() -> void:
 
 
 func create_csg_rooms() -> void:
+	if room_parameters == null:
+		push_warning("RoomCreator: The room creator needs a RoomParameters resource to generate the CSGRooms")
+		return
+		
 	if _tool_can_be_used():
 		var root_node = _prepare_csg_rooms_output_node()
 		
@@ -257,6 +261,10 @@ func generate_collision_on_room_mesh(room_mesh_instance: RoomMesh) -> void:
 	
 
 func generate_room_meshes() -> void:
+	if csg_rooms_created.is_empty():
+		push_warning("RoomCreator: No CSGRooms detected to generate the final meshes")
+		return
+		
 	if _tool_can_be_used():
 		
 		if generate_mesh_mode == MeshGenerationMode.MeshPerRoom:
@@ -336,13 +344,15 @@ func name_surfaces_on_combined_mesh(root_node_for_rooms: CSGCombiner3D, room_mes
 	var index: int = 0
 	
 	for room: CSGRoom in root_node_for_rooms.get_children().filter(func(child): return child is CSGRoom):
-		for shape: CSGBox3D in room.materials_by_room_part:
+		for shape: CSGShape3D in room.materials_by_room_part:
 			room_mesh_instance.mesh.surface_set_name(index, shape.name)
 			index += 1
 	
 	
 func name_surfaces_on_room_mesh(room: CSGRoom, room_mesh_instance: MeshInstance3D) -> void:
-	for shape: CSGBox3D in room.materials_by_room_part:
+	print(room_mesh_instance.mesh)
+	for shape: CSGShape3D in room.materials_by_room_part:
+		print("NAME SURFACES ", shape.name, room.materials_by_room_part[shape])
 		room_mesh_instance.mesh.surface_set_name(room.materials_by_room_part[shape], shape.name)
 
 
